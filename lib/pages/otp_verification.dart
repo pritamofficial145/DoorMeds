@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'reset_password.dart';
 
@@ -14,12 +15,18 @@ class _OtpVerificationState extends State<OtpVerification> {
   final TextEditingController otp3 = TextEditingController();
   final TextEditingController otp4 = TextEditingController();
 
+  Timer? resendTimer;
+  int remainingSeconds = 0;
+
+  bool get isTimerRunning => remainingSeconds > 0;
+
   @override
   void dispose() {
     otp1.dispose();
     otp2.dispose();
     otp3.dispose();
     otp4.dispose();
+    resendTimer?.cancel();
     super.dispose();
   }
 
@@ -28,6 +35,37 @@ class _OtpVerificationState extends State<OtpVerification> {
       context,
       MaterialPageRoute(
         builder: (context) => const ResetPasswordPage(),
+      ),
+    );
+  }
+
+  void startResendTimer() {
+    if (isTimerRunning) return;
+
+    setState(() {
+      remainingSeconds = 60;
+    });
+
+    resendTimer?.cancel();
+
+    resendTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (remainingSeconds == 0) {
+          timer.cancel();
+        } else {
+          setState(() {
+            remainingSeconds--;
+          });
+        }
+      },
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("OTP resent successfully"),
+        backgroundColor: Color(0xff745CFF),
+        duration: Duration(seconds: 1),
       ),
     );
   }
@@ -71,6 +109,13 @@ class _OtpVerificationState extends State<OtpVerification> {
         },
       ),
     );
+  }
+
+  String timerText() {
+    final int minutes = remainingSeconds ~/ 60;
+    final int seconds = remainingSeconds % 60;
+
+    return "$minutes:${seconds.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -178,13 +223,16 @@ class _OtpVerificationState extends State<OtpVerification> {
                       color: Colors.black,
                     ),
                   ),
+
                   GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      "Resend",
+                    onTap: isTimerRunning ? null : startResendTimer,
+                    child: Text(
+                      isTimerRunning
+                          ? "Resend in ${timerText()}"
+                          : "Resend",
                       style: TextStyle(
                         fontSize: 11,
-                        color: Colors.red,
+                        color: isTimerRunning ? Colors.grey : Colors.red,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

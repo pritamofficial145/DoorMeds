@@ -23,25 +23,37 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.dispose();
   }
 
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: const Color(0xff745CFF),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   void resetPassword() {
     String newPassword = newPasswordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
 
     if (newPassword.isEmpty || confirmPassword.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter both password fields"),
-        ),
-      );
+      showMessage("Please enter both password fields");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      showMessage("New password must be at least 8 characters");
+      return;
+    }
+
+    if (confirmPassword.length < 8) {
+      showMessage("Confirm password must be at least 8 characters");
       return;
     }
 
     if (newPassword != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Password does not match"),
-        ),
-      );
+      showMessage("New password and confirm password must be same");
       return;
     }
 
@@ -195,6 +207,30 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
+  Widget passwordRuleText() {
+    return Row(
+      children: const [
+        Icon(
+          Icons.info_outline,
+          size: 16,
+          color: Color(0xff745CFF),
+        ),
+        SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            "Password must be at least 8 characters and both passwords must match.",
+            style: TextStyle(
+              fontSize: 11,
+              color: Color(0xff666666),
+              fontWeight: FontWeight.w600,
+              height: 1.3,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,7 +273,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 24),
+
+                passwordRuleText(),
+
+                const SizedBox(height: 20),
 
                 passwordField(
                   hintText: "New Password",
