@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'reset_password.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class OtpVerification extends StatefulWidget {
-  const OtpVerification({super.key});
+  final String email;
+
+  const OtpVerification({super.key, this.email = ''});
 
   @override
   State<OtpVerification> createState() => _OtpVerificationState();
@@ -30,13 +34,62 @@ class _OtpVerificationState extends State<OtpVerification> {
     super.dispose();
   }
 
-  void goToResetPassword() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ResetPasswordPage(),
-      ),
-    );
+  String get otp =>
+      otp1.text.trim() + otp2.text.trim() + otp3.text.trim() + otp4.text.trim();
+
+  Future<void> goToResetPassword() async {
+    if (otp.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter OTP")));
+      return;
+    }
+
+    if (otp.length != 4) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("OTP must be 4 digits")));
+      return;
+    }
+
+    try {
+      final url = Uri.parse(
+        "http://10.0.2.2/doormed/backend_api/customer_api/verify_forgot_otp.php",
+      );
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": widget.email, "otp": otp}),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (data["success"] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data["message"] ?? "OTP verified successfully"),
+          ),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResetPasswordPage(email: widget.email),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data["message"] ?? "Invalid OTP")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong. Please try again."),
+        ),
+      );
+    }
   }
 
   void startResendTimer() {
@@ -48,18 +101,15 @@ class _OtpVerificationState extends State<OtpVerification> {
 
     resendTimer?.cancel();
 
-    resendTimer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        if (remainingSeconds == 0) {
-          timer.cancel();
-        } else {
-          setState(() {
-            remainingSeconds--;
-          });
-        }
-      },
-    );
+    resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (remainingSeconds == 0) {
+        timer.cancel();
+      } else {
+        setState(() {
+          remainingSeconds--;
+        });
+      }
+    });
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -80,26 +130,17 @@ class _OtpVerificationState extends State<OtpVerification> {
         keyboardType: TextInputType.number,
         maxLength: 1,
         cursorColor: Colors.black,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           counterText: "",
           contentPadding: EdgeInsets.zero,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(6),
-            borderSide: const BorderSide(
-              color: Colors.black,
-              width: 1.2,
-            ),
+            borderSide: const BorderSide(color: Colors.black, width: 1.2),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(6),
-            borderSide: const BorderSide(
-              color: Color(0xff7C3AED),
-              width: 1.4,
-            ),
+            borderSide: const BorderSide(color: Color(0xff7C3AED), width: 1.4),
           ),
         ),
         onChanged: (value) {
@@ -122,7 +163,6 @@ class _OtpVerificationState extends State<OtpVerification> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -130,7 +170,6 @@ class _OtpVerificationState extends State<OtpVerification> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Spacer(),
-
               Center(
                 child: Image.asset(
                   "assets/images/otp.png",
@@ -138,9 +177,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                   fit: BoxFit.contain,
                 ),
               ),
-
               const SizedBox(height: 35),
-
               const Text(
                 "OTP verification",
                 style: TextStyle(
@@ -149,19 +186,12 @@ class _OtpVerificationState extends State<OtpVerification> {
                   color: Colors.black,
                 ),
               ),
-
               const SizedBox(height: 5),
-
-              const Text(
-                "Enter the OTP sent to mr.pritam111@gmail.com",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
+              Text(
+                "Enter the OTP sent to ${widget.email.isNotEmpty ? widget.email : 'your email'}",
+                style: const TextStyle(fontSize: 12, color: Colors.black),
               ),
-
               const SizedBox(height: 28),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -174,9 +204,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                   otpBox(otp4),
                 ],
               ),
-
               const SizedBox(height: 22),
-
               Center(
                 child: Container(
                   width: 170,
@@ -184,10 +212,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     ),
                   ),
                   child: ElevatedButton(
@@ -210,26 +235,18 @@ class _OtpVerificationState extends State<OtpVerification> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 18),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     "Didn’t receive the OTP ? ",
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.black,
-                    ),
+                    style: TextStyle(fontSize: 11, color: Colors.black),
                   ),
-
                   GestureDetector(
                     onTap: isTimerRunning ? null : startResendTimer,
                     child: Text(
-                      isTimerRunning
-                          ? "Resend in ${timerText()}"
-                          : "Resend",
+                      isTimerRunning ? "Resend in ${timerText()}" : "Resend",
                       style: TextStyle(
                         fontSize: 11,
                         color: isTimerRunning ? Colors.grey : Colors.red,
@@ -239,7 +256,6 @@ class _OtpVerificationState extends State<OtpVerification> {
                   ),
                 ],
               ),
-
               const Spacer(),
             ],
           ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'home_page.dart';
 import 'cart_screen.dart';
 import 'wish_list.dart';
+import '../providers/user_provider.dart';
+import 'login_page.dart'; // Assuming LoginPage is in the same directory or adjust path
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -320,7 +323,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.pop(context); // Close dialog
+                            // Clear user data
+                            Provider.of<UserProvider>(
+                              context,
+                              listen: false,
+                            ).clearUser();
+                            // Navigate to login
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                              (route) => false,
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
@@ -351,6 +367,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<UserProvider>().user;
+
     return Scaffold(
       backgroundColor: const Color(0xffF7F7FB),
       body: SafeArea(
@@ -428,24 +446,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: Colors.white.withOpacity(0.25),
                         shape: BoxShape.circle,
                       ),
-                      child: const CircleAvatar(
+                      child: CircleAvatar(
                         radius: 48,
                         backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 43,
-                          backgroundColor: Color(0xffF0EDFF),
-                          child: Icon(
-                            Icons.person,
-                            size: 55,
-                            color: Color(0xff745CFF),
-                          ),
-                        ),
+                        child:
+                            user?.profileImage != null &&
+                                user!.profileImage.isNotEmpty
+                            ? CircleAvatar(
+                                radius: 43,
+                                backgroundImage: NetworkImage(
+                                  user.profileImage,
+                                ),
+                              )
+                            : const CircleAvatar(
+                                radius: 43,
+                                backgroundColor: Color(0xffF0EDFF),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 55,
+                                  color: Color(0xff745CFF),
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      "Pritam Biswas",
-                      style: TextStyle(
+                    Text(
+                      user?.name ?? 'User',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
@@ -453,7 +480,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      "mr.pritam111@gmail.com",
+                      user?.email ?? '',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.82),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      user?.phone ?? '',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.82),
                         fontSize: 13,
@@ -465,19 +501,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         statCard(
                           title: "Orders",
-                          value: "12",
+                          value:
+                              "12", // Placeholder, update if you have order count in user data
                           icon: Icons.shopping_bag_outlined,
                         ),
                         const SizedBox(width: 10),
                         statCard(
                           title: "Wishlist",
-                          value: "08",
+                          value: "08", // Placeholder
                           icon: Icons.favorite_border,
                         ),
                         const SizedBox(width: 10),
                         statCard(
                           title: "Coupons",
-                          value: "05",
+                          value: "05", // Placeholder
                           icon: Icons.local_offer_outlined,
                         ),
                       ],

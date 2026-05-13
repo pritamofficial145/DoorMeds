@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'otp_verification.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -9,9 +11,7 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final TextEditingController emailController = TextEditingController(
-    text: "mr.pritam111@gmail.com",
-  );
+  final TextEditingController emailController = TextEditingController();
 
   @override
   void dispose() {
@@ -19,19 +19,61 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
-  void sendResetLink() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Reset OTP sent successfully"),
-      ),
-    );
+  Future<void> sendResetLink() async {
+    String email = emailController.text.trim();
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const OtpVerification(),
-      ),
-    );
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter your email")));
+      return;
+    }
+
+    if (!email.contains("@")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter valid email address")),
+      );
+      return;
+    }
+
+    try {
+      final url = Uri.parse(
+        "http://10.0.2.2/doormed/backend_api/customer_api/forgot_password.php",
+      );
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (data["success"] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data["message"] ?? "Reset OTP sent successfully"),
+          ),
+        );
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OtpVerification(email: email),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data["message"] ?? "Failed to send OTP")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong. Please try again."),
+        ),
+      );
+    }
   }
 
   void goBackToLogin() {
@@ -42,7 +84,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -50,8 +91,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Spacer(),
-
-              /// Asset Image
               Center(
                 child: Image.asset(
                   "assets/images/forget_password.png",
@@ -59,9 +98,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   fit: BoxFit.contain,
                 ),
               ),
-
               const SizedBox(height: 50),
-
               const Text(
                 "Forgot Password",
                 style: TextStyle(
@@ -70,19 +107,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   color: Colors.black,
                 ),
               ),
-
               const SizedBox(height: 28),
-
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 cursorColor: Colors.black,
                 decoration: InputDecoration(
                   labelText: "Email Address",
-                  labelStyle: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
+                  labelStyle: const TextStyle(color: Colors.grey, fontSize: 13),
                   floatingLabelStyle: const TextStyle(
                     color: Colors.grey,
                     fontSize: 13,
@@ -107,9 +139,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
-
               Center(
                 child: Container(
                   width: 170,
@@ -117,10 +147,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     ),
                   ),
                   child: ElevatedButton(
@@ -143,18 +170,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 18),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     "Remember your password ? ",
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.black,
-                    ),
+                    style: TextStyle(fontSize: 11, color: Colors.black),
                   ),
                   GestureDetector(
                     onTap: goBackToLogin,
@@ -170,7 +192,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ],
               ),
-
               const Spacer(),
             ],
           ),

@@ -13,7 +13,6 @@ import 'package:app_new/pages/login_page.dart';
 import 'package:app_new/pages/home_page.dart';
 import 'package:app_new/pages/forget_password.dart';
 import 'package:app_new/pages/otp_verification.dart';
-import 'package:app_new/pages/reset_password.dart';
 import 'package:app_new/pages/cart_screen.dart';
 import 'package:app_new/pages/wish_list.dart';
 import 'package:app_new/pages/profile_screen.dart';
@@ -24,10 +23,7 @@ import 'package:app_new/utils/routes.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => UserProvider(),
-      child: const MyApp(),
-    ),
+    ChangeNotifierProvider(create: (_) => UserProvider(), child: const MyApp()),
   );
 }
 
@@ -47,9 +43,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.latoTextTheme(),
       ),
 
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-      ),
+      darkTheme: ThemeData(brightness: Brightness.dark),
 
       initialRoute: MyRoutes.splashRoute,
 
@@ -60,11 +54,11 @@ class MyApp extends StatelessWidget {
         MyRoutes.homeRoute: (context) => const HomePage(),
         MyRoutes.forgetPasswordRoute: (context) => const ForgotPasswordPage(),
         MyRoutes.otpVerificationRoute: (context) => const OtpVerification(),
-        MyRoutes.resetPasswordRoute: (context) => const ResetPasswordPage(),
         MyRoutes.cartRoute: (context) => const CartScreen(),
         MyRoutes.wishListRoute: (context) => const WishList(),
         MyRoutes.profileRoute: (context) => const ProfileScreen(),
-        MyRoutes.orderSummeryRoute:(context) => const OrderSummery(product: {},),
+        MyRoutes.orderSummeryRoute: (context) =>
+            const OrderSummery(product: {}),
         MyRoutes.paymentRoute: (context) => const PaymentScreen(),
         MyRoutes.createAccountRoute: (context) => const CreateAccountPage(),
         MyRoutes.splashRoute: (context) => const SplashScreen(),

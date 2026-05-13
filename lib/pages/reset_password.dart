@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'login_page.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  final String email;
+
+  const ResetPasswordPage({super.key, required this.email});
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -33,7 +37,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
-  void resetPassword() {
+  Future<void> resetPassword() async {
     String newPassword = newPasswordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
 
@@ -57,7 +61,31 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       return;
     }
 
-    showSuccessPopup();
+    try {
+      final url = Uri.parse(
+        "http://10.0.2.2/doormed/backend_api/customer_api/reset_password.php",
+      );
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": widget.email,
+          "new_password": newPassword,
+          "confirm_password": confirmPassword,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (data["success"] == true) {
+        showSuccessPopup();
+      } else {
+        showMessage(data["message"] ?? "Failed to reset password");
+      }
+    } catch (e) {
+      showMessage("Something went wrong. Please try again.");
+    }
   }
 
   void showSuccessPopup() {
@@ -85,10 +113,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight,
                     ),
@@ -121,10 +146,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     ),
                   ),
                   child: ElevatedButton(
@@ -132,7 +154,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomePage(),
+                          builder: (context) => const LoginPage(),
                         ),
                         (route) => false,
                       );
@@ -145,7 +167,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       ),
                     ),
                     child: const Text(
-                      "Go to home",
+                      "Go to Login",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -174,10 +196,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       cursorColor: Colors.black,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(
-          color: Color(0xff4D4D4D),
-          fontSize: 13,
-        ),
+        hintStyle: const TextStyle(color: Color(0xff4D4D4D), fontSize: 13),
         prefixIcon: const Icon(
           Icons.lock_outline,
           color: Colors.black,
@@ -210,11 +229,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Widget passwordRuleText() {
     return Row(
       children: const [
-        Icon(
-          Icons.info_outline,
-          size: 16,
-          color: Color(0xff745CFF),
-        ),
+        Icon(Icons.info_outline, size: 16, color: Color(0xff745CFF)),
         SizedBox(width: 6),
         Expanded(
           child: Text(
@@ -235,7 +250,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -311,10 +325,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     ),
                   ),
                   child: ElevatedButton(

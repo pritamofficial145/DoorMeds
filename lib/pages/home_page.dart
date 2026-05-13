@@ -15,7 +15,6 @@ import 'orders_screen.dart';
 import 'reports_screen.dart';
 import 'customize_package_screen.dart';
 
-import '../models/user_model.dart';
 import '../providers/user_provider.dart';
 
 class HomePage extends StatefulWidget {
