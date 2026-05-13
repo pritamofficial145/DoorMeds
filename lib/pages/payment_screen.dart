@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
+import 'order_store.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key});
+  final Map<String, String>? product;
+
+  const PaymentScreen({
+    super.key,
+    this.product,
+  });
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -10,6 +16,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   String? selectedPayment;
+  bool orderSaved = false;
 
   final TextEditingController upiController = TextEditingController();
   final TextEditingController cardNumberController = TextEditingController();
@@ -27,6 +34,34 @@ class _PaymentScreenState extends State<PaymentScreen> {
     cvvController.dispose();
     emiPlanController.dispose();
     super.dispose();
+  }
+
+  Map<String, String> get currentProduct {
+    return widget.product ??
+        {
+          "image": "assets/images/product/product1.png",
+          "title": "Pain Relief Oil",
+          "price": "₹144",
+          "oldPrice": "₹399",
+        };
+  }
+
+  String createOrderId() {
+    final now = DateTime.now();
+    return "DM${now.millisecondsSinceEpoch.toString().substring(7)}";
+  }
+
+  String currentDate() {
+    final now = DateTime.now();
+    return "${now.day}/${now.month}/${now.year}";
+  }
+
+  String currentTime() {
+    final now = DateTime.now();
+    final hour = now.hour > 12 ? now.hour - 12 : now.hour;
+    final minute = now.minute.toString().padLeft(2, "0");
+    final period = now.hour >= 12 ? "PM" : "AM";
+    return "$hour:$minute $period";
   }
 
   void selectPayment(String method) {
@@ -115,8 +150,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return false;
   }
 
+  void saveOrderToStore() {
+    if (orderSaved) return;
+
+    OrderStore.addOrder({
+      "orderId": createOrderId(),
+      "image": currentProduct["image"] ?? "assets/images/product/product1.png",
+      "title": currentProduct["title"] ?? "Medicine Order",
+      "price": currentProduct["price"] ?? "₹0",
+      "oldPrice": currentProduct["oldPrice"] ?? "",
+      "status": "Order Confirmed",
+      "date": currentDate(),
+      "time": currentTime(),
+      "address": "XYZ, Near to Chain Smoker area, 122425",
+      "delivered": false,
+      "step": 1,
+      "paymentMethod": selectedPayment ?? "cod",
+    });
+
+    orderSaved = true;
+  }
+
   void placeOrder() {
     if (validatePaymentInfo()) {
+      saveOrderToStore();
       showOrderConfirmedPopup();
     }
   }
@@ -182,8 +239,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     Color(0xff2878E8),
                                     Color(0xff9C27E8),
                                   ],
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomLeft,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
@@ -203,113 +258,63 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           );
                         },
                       ),
-
                       const SizedBox(height: 28),
-
-                      TweenAnimationBuilder<double>(
-                        tween: Tween<double>(begin: 0, end: 1),
-                        duration: const Duration(milliseconds: 650),
-                        curve: Curves.easeOut,
-                        builder: (context, value, child) {
-                          return Opacity(
-                            opacity: value,
-                            child: Transform.translate(
-                              offset: Offset(0, 20 * (1 - value)),
-                              child: child,
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Order Confirmed !!",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.black,
-                          ),
+                      const Text(
+                        "Order Confirmed !!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black,
                         ),
                       ),
-
                       const SizedBox(height: 8),
-
-                      TweenAnimationBuilder<double>(
-                        tween: Tween<double>(begin: 0, end: 1),
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.easeOut,
-                        builder: (context, value, child) {
-                          return Opacity(
-                            opacity: value,
-                            child: child,
-                          );
-                        },
-                        child: Text(
-                          "Your medicine order has been placed successfully.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey.shade600,
-                            height: 1.4,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      Text(
+                        "Your medicine order has been placed successfully.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey.shade600,
+                          height: 1.4,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-
                       const SizedBox(height: 28),
-
-                      TweenAnimationBuilder<double>(
-                        tween: Tween<double>(begin: 0, end: 1),
-                        duration: const Duration(milliseconds: 900),
-                        curve: Curves.easeOutBack,
-                        builder: (context, value, child) {
-                          return Transform.scale(
-                            scale: value,
-                            child: child,
-                          );
-                        },
-                        child: Container(
-                          width: 170,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xff9C27E8),
-                                Color(0xff2878E8),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xff745CFF)
-                                    .withOpacity(0.25),
-                                blurRadius: 12,
-                                offset: const Offset(0, 5),
-                              ),
+                      Container(
+                        width: 170,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xff9C27E8),
+                              Color(0xff2878E8),
                             ],
                           ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const HomePage(),
-                                ),
-                                (route) => false,
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(9),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomePage(),
                               ),
+                              (route) => false,
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(9),
                             ),
-                            child: const Text(
-                              "Go to home",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w900,
-                              ),
+                          ),
+                          child: const Text(
+                            "Go to home",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
                         ),
@@ -421,7 +426,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         children: [
           const Text(
             "Due to handling costs, a nominal fee of ₹10 will be charged for order placed using this option.",
-            textAlign: TextAlign.left,
             style: TextStyle(
               fontSize: 10,
               color: Colors.black54,
@@ -574,7 +578,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     return Text(
       "You selected $title. Fill the details to place your order.",
-      textAlign: TextAlign.center,
       style: const TextStyle(
         fontSize: 10,
         color: Colors.black54,
@@ -640,7 +643,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ],
               ),
             ),
-
             if (isSelected)
               Container(
                 margin: const EdgeInsets.fromLTRB(38, 0, 38, 14),
@@ -658,7 +660,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
                 child: paymentDetailsBox(value, title),
               ),
-
             const Divider(
               height: 1,
               thickness: 1,
@@ -808,14 +809,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 20),
-
                   paymentStepper(),
                 ],
               ),
             ),
-
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

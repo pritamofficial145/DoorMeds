@@ -13,42 +13,12 @@ class OrderSummery extends StatelessWidget {
       product["image"] ?? "assets/images/product/product1.png";
 
   String get productTitle =>
-      product["title"] ?? "Choose Medicine Product";
+      product["title"] ??
+      "Kerala Ayurveda Murivenna Oil For Burns, Cuts, and Sprains";
 
   String get productPrice => product["price"] ?? "₹144";
 
   String get oldPrice => product["oldPrice"] ?? "₹399";
-
-  int priceToInt(String price) {
-    return int.tryParse(
-          price.replaceAll("₹", "").replaceAll(",", "").trim(),
-        ) ??
-        0;
-  }
-
-  int get discountPercent {
-    final int price = priceToInt(productPrice);
-    final int mrp = priceToInt(oldPrice);
-
-    if (mrp == 0) return 0;
-
-    return (((mrp - price) / mrp) * 100).round();
-  }
-
-  int get discountAmount {
-    final int price = priceToInt(productPrice);
-    final int mrp = priceToInt(oldPrice);
-
-    if (mrp == 0) return 0;
-
-    return mrp - price;
-  }
-
-  int get deliveryCharge => 50;
-
-  int get totalAmount {
-    return priceToInt(productPrice) + deliveryCharge;
-  }
 
   Widget productImageWidget(String path, {double height = 120}) {
     return Image.asset(
@@ -188,15 +158,15 @@ class OrderSummery extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const PaymentScreen(),
+        builder: (context) => PaymentScreen(
+          product: product,
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final int mrp = priceToInt(oldPrice);
-
     return Scaffold(
       backgroundColor: const Color(0xffF8F8F8),
       body: SafeArea(
@@ -255,7 +225,6 @@ class OrderSummery extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    /// Address Card
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
@@ -327,7 +296,6 @@ class OrderSummery extends StatelessWidget {
 
                     const SizedBox(height: 18),
 
-                    /// Product Card
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(
@@ -354,9 +322,7 @@ class OrderSummery extends StatelessWidget {
                               height: 135,
                             ),
                           ),
-
                           const SizedBox(width: 12),
-
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -372,9 +338,7 @@ class OrderSummery extends StatelessWidget {
                                     height: 1.25,
                                   ),
                                 ),
-
                                 const SizedBox(height: 12),
-
                                 Row(
                                   children: [
                                     Text(
@@ -396,9 +360,9 @@ class OrderSummery extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 7),
-                                    Text(
-                                      "$discountPercent% off",
-                                      style: const TextStyle(
+                                    const Text(
+                                      "57% off",
+                                      style: TextStyle(
                                         fontSize: 17,
                                         color: Color(0xff745CFF),
                                         fontWeight: FontWeight.w900,
@@ -415,7 +379,6 @@ class OrderSummery extends StatelessWidget {
 
                     const SizedBox(height: 18),
 
-                    /// Price Details
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.fromLTRB(18, 22, 18, 8),
@@ -431,27 +394,22 @@ class OrderSummery extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          priceRow("MRP", "₹$mrp"),
-                          priceRow("Discount", "₹$discountAmount"),
-                          priceRow("Delivery Charge", "₹$deliveryCharge"),
+                          priceRow("MRP", oldPrice),
+                          priceRow("Discount", "57% off"),
+                          priceRow("Delivery Charge", "₹50"),
                           const Divider(
                             height: 8,
                             thickness: 1,
                             color: Color(0xffEFEFEF),
                           ),
                           const SizedBox(height: 12),
-                          priceRow(
-                            "Total Amount",
-                            "₹$totalAmount",
-                            bold: true,
-                          ),
+                          priceRow("Total Amount", productPrice, bold: true),
                         ],
                       ),
                     ),
 
                     const SizedBox(height: 24),
 
-                    /// Continue Button
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18),
                       child: Align(

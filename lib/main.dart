@@ -3,6 +3,10 @@ import 'package:app_new/pages/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:app_new/pages/splash_screen.dart';
+import 'package:app_new/pages/splash_screen1.dart';
+import 'package:app_new/pages/splash_screen2.dart';
+import 'package:app_new/pages/splash_screen3.dart';
 import 'package:app_new/pages/login_page.dart';
 import 'package:app_new/pages/home_page.dart';
 import 'package:app_new/pages/forget_password.dart';
@@ -12,6 +16,7 @@ import 'package:app_new/pages/cart_screen.dart';
 import 'package:app_new/pages/wish_list.dart';
 import 'package:app_new/pages/profile_screen.dart';
 import 'package:app_new/pages/item_details.dart';
+import 'package:app_new/pages/create_account.dart';
 
 import 'package:app_new/utils/routes.dart';
 
@@ -39,10 +44,10 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
       ),
 
-      initialRoute: MyRoutes.loginRoute,
+      initialRoute: MyRoutes.splashRoute,
 
       routes: {
-        "/": (context) => const LoginPage(),
+        "/": (context) => const SplashScreen(),
 
         MyRoutes.loginRoute: (context) => const LoginPage(),
         MyRoutes.homeRoute: (context) => const HomePage(),
@@ -54,6 +59,11 @@ class MyApp extends StatelessWidget {
         MyRoutes.profileRoute: (context) => const ProfileScreen(),
         MyRoutes.orderSummeryRoute:(context) => const OrderSummery(product: {},),
         MyRoutes.paymentRoute: (context) => const PaymentScreen(),
+        MyRoutes.createAccountRoute: (context) => const CreateAccountPage(),
+        MyRoutes.splashRoute: (context) => const SplashScreen(),
+        MyRoutes.splashRoute1: (context) => const SplashScreen1(),
+        MyRoutes.splashRoute2: (context) => const SplashScreen2(),
+        MyRoutes.splashRoute3: (context) => const SplashScreen3(),
       },
 
       onGenerateRoute: (settings) {

@@ -1,4 +1,8 @@
 class MyRoutes {
+  static String splashRoute = "/splash";
+  static String splashRoute1 = "/splash1";
+  static String splashRoute2 = "/splash2";
+  static String splashRoute3 = "/splash3";
   static String loginRoute = "/login";
   static String homeRoute = "/home";
   static String forgetPasswordRoute = "/forget-password";
@@ -10,4 +14,5 @@ class MyRoutes {
   static String itemDetailsRoute = "/item-details";
   static String orderSummeryRoute ="/order_summery";
   static String paymentRoute = "/payment";
+  static String createAccountRoute = "/create-account";
 }

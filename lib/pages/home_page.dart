@@ -126,8 +126,7 @@ class _HomePageState extends State<HomePage> {
       "type": "Herbal Wellness Oil",
       "quantity": "100 ml",
       "package": "1 Bottle",
-      "description":
-          "Natural Herbal Oil supports relaxation and body comfort.",
+      "description": "Natural Herbal Oil supports relaxation and body comfort.",
       "benefits": "Supports relaxation, body massage and pain relief.",
       "usage": "Massage gently before bath or before sleep.",
       "caution": "Keep away from children and store in a cool place.",
@@ -559,9 +558,7 @@ class _HomePageState extends State<HomePage> {
   void goToItemDetails(Map<String, String> product) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => ItemDetails(product: product),
-      ),
+      MaterialPageRoute(builder: (context) => ItemDetails(product: product)),
     );
   }
 
@@ -648,9 +645,7 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                           color: const Color(0xffF4F1FF),
                           borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
-                            color: const Color(0xffDCD3FF),
-                          ),
+                          border: Border.all(color: const Color(0xffDCD3FF)),
                         ),
                         child: const Column(
                           children: [
@@ -685,9 +680,7 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                           color: const Color(0xffF4F1FF),
                           borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
-                            color: const Color(0xffDCD3FF),
-                          ),
+                          border: Border.all(color: const Color(0xffDCD3FF)),
                         ),
                         child: const Column(
                           children: [
@@ -1032,11 +1025,7 @@ class _HomePageState extends State<HomePage> {
           color: const Color(0xffF4F1FF),
           borderRadius: BorderRadius.circular(11),
         ),
-        child: Icon(
-          icon,
-          size: 18,
-          color: const Color(0xff745CFF),
-        ),
+        child: Icon(icon, size: 18, color: const Color(0xff745CFF)),
       ),
     );
   }
@@ -1105,11 +1094,7 @@ class _HomePageState extends State<HomePage> {
                     searchText = "";
                   });
                 },
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.grey,
-                  size: 20,
-                ),
+                child: const Icon(Icons.close, color: Colors.grey, size: 20),
               )
             else ...[
               searchActionIcon(
@@ -1129,12 +1114,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _sectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 18,
-        bottom: 10,
-      ),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 18, bottom: 10),
       child: Row(
         children: [
           Text(
@@ -1146,21 +1126,21 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xffF0EDFF),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              "See all",
-              style: TextStyle(
-                fontSize: 11,
-                color: Color(0xff745CFF),
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          //   decoration: BoxDecoration(
+          //     color: const Color(0xffF0EDFF),
+          //     borderRadius: BorderRadius.circular(20),
+          //   ),
+          //   child: const Text(
+          //     "See all",
+          //     style: TextStyle(
+          //       fontSize: 11,
+          //       color: Color(0xff745CFF),
+          //       fontWeight: FontWeight.w800,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -1255,11 +1235,7 @@ class _HomePageState extends State<HomePage> {
             color: color.withOpacity(0.12),
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 25,
-          ),
+          child: Icon(icon, color: color, size: 25),
         ),
         const SizedBox(height: 6),
         Text(
@@ -1286,11 +1262,7 @@ class _HomePageState extends State<HomePage> {
               color: const Color(0xffF3F1FF),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(
-              icon,
-              color: const Color(0xff745CFF),
-              size: 25,
-            ),
+            child: Icon(icon, color: const Color(0xff745CFF), size: 25),
           ),
           const SizedBox(height: 6),
           Text(
@@ -1337,9 +1309,7 @@ class _HomePageState extends State<HomePage> {
                   alignment: Alignment.topLeft,
                   child: _discountBadge(p["price"]!, p["oldPrice"]!),
                 ),
-                Center(
-                  child: _assetImage(p["image"]!, height: 75),
-                ),
+                Center(child: _assetImage(p["image"]!, height: 75)),
                 const SizedBox(height: 5),
                 Text(
                   p["title"]!,
@@ -1374,11 +1344,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            Positioned(
-              right: 0,
-              top: 0,
-              child: _likeButton(p),
-            ),
+            Positioned(right: 0, top: 0, child: _likeButton(p)),
           ],
         ),
       ),
@@ -1412,9 +1378,7 @@ class _HomePageState extends State<HomePage> {
                   child: _discountBadge(p["price"]!, p["oldPrice"]!),
                 ),
                 Expanded(
-                  child: Center(
-                    child: _assetImage(p["image"]!, height: 95),
-                  ),
+                  child: Center(child: _assetImage(p["image"]!, height: 95)),
                 ),
                 const SizedBox(height: 5),
                 Text(
@@ -1455,11 +1419,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            Positioned(
-              right: 0,
-              top: 0,
-              child: _likeButton(p),
-            ),
+            Positioned(right: 0, top: 0, child: _likeButton(p)),
           ],
         ),
       ),
@@ -1535,25 +1495,22 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            banners.length,
-            (index) {
-              final bool isActive = currentBannerIndex == index;
+          children: List.generate(banners.length, (index) {
+            final bool isActive = currentBannerIndex == index;
 
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                margin: const EdgeInsets.symmetric(horizontal: 3),
-                width: isActive ? 18 : 7,
-                height: 7,
-                decoration: BoxDecoration(
-                  color: isActive
-                      ? const Color(0xff745CFF)
-                      : const Color(0xffD6D6D6),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              );
-            },
-          ),
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              width: isActive ? 18 : 7,
+              height: 7,
+              decoration: BoxDecoration(
+                color: isActive
+                    ? const Color(0xff745CFF)
+                    : const Color(0xffD6D6D6),
+                borderRadius: BorderRadius.circular(20),
+              ),
+            );
+          }),
         ),
       ],
     );
@@ -1586,10 +1543,7 @@ class _HomePageState extends State<HomePage> {
             shape: BoxShape.circle,
             gradient: selected
                 ? const LinearGradient(
-                    colors: [
-                      Color(0xff9C27E8),
-                      Color(0xff2878E8),
-                    ],
+                    colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
                   )
@@ -1634,20 +1588,14 @@ class _HomePageState extends State<HomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          navIcon(
-            index: 0,
-            icon: Icons.home_rounded,
-            onTap: () {},
-          ),
+          navIcon(index: 0, icon: Icons.home_rounded, onTap: () {}),
           navIcon(
             index: 1,
             icon: Icons.shopping_cart,
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const CartScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const CartScreen()),
               ).then((_) {
                 setState(() {
                   selectedNavIndex = 0;
@@ -1661,9 +1609,7 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const WishList(),
-                ),
+                MaterialPageRoute(builder: (context) => const WishList()),
               ).then((_) {
                 setState(() {
                   selectedNavIndex = 0;
@@ -1677,9 +1623,7 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
               ).then((_) {
                 setState(() {
                   selectedNavIndex = 0;
@@ -1714,15 +1658,11 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             gradient: const LinearGradient(
-                              colors: [
-                                Color(0xff9C27E8),
-                                Color(0xff2878E8),
-                              ],
+                              colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color:
-                                    const Color(0xff745CFF).withOpacity(0.4),
+                                color: const Color(0xff745CFF).withOpacity(0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 3),
                               ),
@@ -1773,7 +1713,7 @@ class _HomePageState extends State<HomePage> {
                   /// Category
                   _sectionTitle("Category"),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: categories.map((item) {
@@ -1794,7 +1734,7 @@ class _HomePageState extends State<HomePage> {
                   /// Quick Actions
                   _sectionTitle("Quick Actions"),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1848,8 +1788,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) =>
-                                    const CustomizePackageScreen(),
+                                builder: (_) => const CustomizePackageScreen(),
                               ),
                             );
                           },

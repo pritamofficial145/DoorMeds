@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'forget_password.dart';
+import 'create_account.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,6 +37,15 @@ class _LoginPageState extends State<LoginPage> {
       context,
       MaterialPageRoute(
         builder: (context) => const ForgotPasswordPage(),
+      ),
+    );
+  }
+
+  void goToCreateAccount() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CreateAccountPage(),
       ),
     );
   }
@@ -265,7 +275,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: goToCreateAccount,
                       child: const Text(
                         "Create account",
                         style: TextStyle(
