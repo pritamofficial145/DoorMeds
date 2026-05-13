@@ -46,11 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: iconColor.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: 24,
-              ),
+              child: Icon(icon, color: iconColor, size: 24),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -96,23 +92,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Expanded(
       child: Container(
         height: 90,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.18),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.25),
-          ),
+          border: Border.all(color: Colors.white.withOpacity(0.25)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 24,
-            ),
-            const SizedBox(height: 7),
+            Icon(icon, color: Colors.white, size: 24),
+            const SizedBox(height: 0),
             Text(
               value,
               style: const TextStyle(
@@ -127,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 10,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
@@ -163,10 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             shape: BoxShape.circle,
             gradient: selected
                 ? const LinearGradient(
-                    colors: [
-                      Color(0xff9C27E8),
-                      Color(0xff2878E8),
-                    ],
+                    colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
                   )
@@ -217,9 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const HomePage(),
-                ),
+                MaterialPageRoute(builder: (context) => const HomePage()),
                 (route) => false,
               );
             },
@@ -230,9 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const CartScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const CartScreen()),
               );
             },
           ),
@@ -242,17 +225,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const WishList(),
-                ),
+                MaterialPageRoute(builder: (context) => const WishList()),
               );
             },
           ),
-          navIcon(
-            index: 3,
-            icon: Icons.person_outline,
-            onTap: () {},
-          ),
+          navIcon(index: 3, icon: Icons.person_outline, onTap: () {}),
         ],
       ),
     );
@@ -279,10 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     ),
                   ),
                   child: const Icon(
@@ -319,9 +293,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pop(context);
                         },
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(
-                            color: Color(0xff745CFF),
-                          ),
+                          side: const BorderSide(color: Color(0xff745CFF)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -343,10 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
                           gradient: const LinearGradient(
-                            colors: [
-                              Color(0xff9C27E8),
-                              Color(0xff2878E8),
-                            ],
+                            colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                           ),
                         ),
                         child: ElevatedButton(
@@ -394,10 +363,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Color(0xff9C27E8),
-                      Color(0xff2878E8),
-                    ],
+                    colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -528,15 +494,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xffF0EDFF),
-                        Color(0xffE8F1FF),
-                      ],
+                      colors: [Color(0xffF0EDFF), Color(0xffE8F1FF)],
                     ),
                     borderRadius: BorderRadius.circular(22),
-                    border: Border.all(
-                      color: const Color(0xffDDD5FF),
-                    ),
+                    border: Border.all(color: const Color(0xffDDD5FF)),
                   ),
                   child: Row(
                     children: [
@@ -546,10 +507,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
-                            colors: [
-                              Color(0xff9C27E8),
-                              Color(0xff2878E8),
-                            ],
+                            colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                           ),
                         ),
                         child: const Icon(

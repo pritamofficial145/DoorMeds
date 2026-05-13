@@ -2,6 +2,8 @@ import 'package:app_new/pages/order_summery.dart';
 import 'package:app_new/pages/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'providers/user_provider.dart';
 
 import 'package:app_new/pages/splash_screen.dart';
 import 'package:app_new/pages/splash_screen1.dart';
@@ -21,7 +23,12 @@ import 'package:app_new/pages/create_account.dart';
 import 'package:app_new/utils/routes.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => UserProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

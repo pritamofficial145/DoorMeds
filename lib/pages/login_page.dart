@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'home_page.dart';
 import 'forget_password.dart';
 import 'create_account.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../models/user_model.dart';
+import '../providers/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,30 +28,76 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void loginUser() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomePage(),
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: const Color(0xff745CFF),
+        duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+  Future<void> loginUser() async {
+    String input = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if (input.isEmpty || password.isEmpty) {
+      showMessage("Please fill all fields");
+      return;
+    }
+
+    if (password.length < 8) {
+      showMessage("Password must be at least 8 characters");
+      return;
+    }
+
+    try {
+      final url = Uri.parse(
+        "http://10.0.2.2/doormed/backend_api/customer_api/login.php",
+      );
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"input": input, "password": password}),
+      );
+
+      if (response.statusCode != 200) {
+        showMessage("Server error: ${response.statusCode}");
+        return;
+      }
+
+      final data = jsonDecode(response.body);
+
+      if (data["success"] == true && data["customer"] != null) {
+        final user = UserModel.fromJson(data["customer"]);
+        Provider.of<UserProvider>(context, listen: false).setUser(user);
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+          (route) => false,
+        );
+      } else {
+        showMessage(data["message"] ?? "Login failed");
+      }
+    } catch (e) {
+      showMessage("Something went wrong. Please try again.");
+    }
   }
 
   void forgotPassword() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const ForgotPasswordPage(),
-      ),
+      MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
     );
   }
 
   void goToCreateAccount() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const CreateAccountPage(),
-      ),
+      MaterialPageRoute(builder: (context) => const CreateAccountPage()),
     );
   }
 
@@ -87,10 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                 const Text(
                   "Your medicines, delivered with care and trust",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xff222222),
-                  ),
+                  style: TextStyle(fontSize: 14, color: Color(0xff222222)),
                 ),
 
                 const SizedBox(height: 22),
@@ -171,10 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: forgotPassword,
                       child: const Text(
                         "Forgot Password ?",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 11,
-                        ),
+                        style: TextStyle(color: Colors.black, fontSize: 11),
                       ),
                     ),
                   ),
@@ -188,10 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     ),
                   ),
                   child: ElevatedButton(
@@ -221,23 +263,14 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     children: const [
                       Expanded(
-                        child: Divider(
-                          color: Colors.black54,
-                          thickness: 1,
-                        ),
+                        child: Divider(color: Colors.black54, thickness: 1),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          "or",
-                          style: TextStyle(fontSize: 12),
-                        ),
+                        child: Text("or", style: TextStyle(fontSize: 12)),
                       ),
                       Expanded(
-                        child: Divider(
-                          color: Colors.black54,
-                          thickness: 1,
-                        ),
+                        child: Divider(color: Colors.black54, thickness: 1),
                       ),
                     ],
                   ),
@@ -269,10 +302,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     const Text(
                       "Don’t have an account ? ",
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.black,
-                      ),
+                      style: TextStyle(fontSize: 11, color: Colors.black),
                     ),
                     GestureDetector(
                       onTap: goToCreateAccount,

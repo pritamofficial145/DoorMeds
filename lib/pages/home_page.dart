@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import 'cart_screen.dart';
 import 'wish_list.dart';
@@ -13,6 +14,9 @@ import 'order_again_screen.dart';
 import 'orders_screen.dart';
 import 'reports_screen.dart';
 import 'customize_package_screen.dart';
+
+import '../models/user_model.dart';
+import '../providers/user_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -1638,6 +1642,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<UserProvider>().user;
+
     return ValueListenableBuilder<List<Map<String, String>>>(
       valueListenable: WishlistStore.wishlistItems,
       builder: (context, wishlistItems, child) {
@@ -1679,18 +1685,18 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Hi Pritam ",
-                              style: TextStyle(
+                              "Hi ${user?.name ?? 'User'} ",
+                              style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w900,
                                 color: Colors.black87,
                               ),
                             ),
-                            Text(
+                            const Text(
                               "Have a great day!",
                               style: TextStyle(
                                 fontSize: 13,

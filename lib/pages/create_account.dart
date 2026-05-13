@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({super.key});
@@ -29,7 +31,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     super.dispose();
   }
 
-  void createAccount() {
+  Future<void> createAccount() async {
     String name = nameController.text.trim();
     String email = emailController.text.trim();
     String phone = phoneController.text.trim();
@@ -65,7 +67,32 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       return;
     }
 
-    showSuccessPopup();
+    try {
+      final url = Uri.parse(
+        "http://10.0.2.2/doormed/backend_api/customer_api/register.php",
+      );
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": name,
+          "email": email,
+          "phone": phone,
+          "password": password,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (data["success"] == true) {
+        showSuccessPopup();
+      } else {
+        showMessage(data["message"] ?? "Registration failed");
+      }
+    } catch (e) {
+      showMessage("Something went wrong. Please try again.");
+    }
   }
 
   void showMessage(String message) {
@@ -81,9 +108,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   void goToLogin() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => const LoginPage(),
-      ),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
   }
 
@@ -111,10 +136,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight,
                     ),
@@ -153,10 +175,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(22),
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     ),
                   ),
                   child: ElevatedButton(
@@ -200,14 +219,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         cursorColor: Colors.black,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(
-            color: Color(0xff9A9A9A),
-            fontSize: 14,
-          ),
-          prefixIcon: Icon(
-            icon,
-            color: Colors.black,
-          ),
+          hintStyle: const TextStyle(color: Color(0xff9A9A9A), fontSize: 14),
+          prefixIcon: Icon(icon, color: Colors.black),
           filled: true,
           fillColor: const Color(0xffF1F1F1),
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -234,14 +247,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         cursorColor: Colors.black,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(
-            color: Color(0xff9A9A9A),
-            fontSize: 14,
-          ),
-          prefixIcon: const Icon(
-            Icons.lock_outline,
-            color: Colors.black,
-          ),
+          hintStyle: const TextStyle(color: Color(0xff9A9A9A), fontSize: 14),
+          prefixIcon: const Icon(Icons.lock_outline, color: Colors.black),
           suffixIcon: IconButton(
             icon: Icon(
               isVisible
@@ -316,10 +323,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 const Text(
                   "Join us and get medicines delivered with care",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Color(0xff222222),
-                  ),
+                  style: TextStyle(fontSize: 13, color: Color(0xff222222)),
                 ),
 
                 const SizedBox(height: 22),
@@ -408,10 +412,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff9C27E8),
-                        Color(0xff2878E8),
-                      ],
+                      colors: [Color(0xff9C27E8), Color(0xff2878E8)],
                     ),
                   ),
                   child: ElevatedButton(
@@ -441,23 +442,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   child: Row(
                     children: const [
                       Expanded(
-                        child: Divider(
-                          color: Colors.black54,
-                          thickness: 1,
-                        ),
+                        child: Divider(color: Colors.black54, thickness: 1),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          "or",
-                          style: TextStyle(fontSize: 12),
-                        ),
+                        child: Text("or", style: TextStyle(fontSize: 12)),
                       ),
                       Expanded(
-                        child: Divider(
-                          color: Colors.black54,
-                          thickness: 1,
-                        ),
+                        child: Divider(color: Colors.black54, thickness: 1),
                       ),
                     ],
                   ),
@@ -481,10 +473,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   children: [
                     const Text(
                       "Already have an account ? ",
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.black,
-                      ),
+                      style: TextStyle(fontSize: 11, color: Colors.black),
                     ),
                     GestureDetector(
                       onTap: goToLogin,
